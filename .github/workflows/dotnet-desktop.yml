@@ -1,0 +1,30 @@
+name: NopCommers
+
+on:
+  push:
+    branches: [ "develop" ]
+  # pull_request:
+  #   branches: [ "develop" ]
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup .NET core
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '9.0'
+    - name: Resore dependencies
+      run: dotnet restore ./src/Presentation/Nop.Web/Nop.Web.csproj
+
+    - name: Build
+      run: dotnet build ./src/Presentation/Nop.Web/Nop.Web.csproj --configuration Release
+
+    - name: Publish
+      run: dotnet publish ./src/Presentation/Nop.Web/Nop.Web.csproj -c Release -o publish_output
